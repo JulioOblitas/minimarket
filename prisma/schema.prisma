@@ -1,0 +1,185 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Producto {
+  id             Int             @id @unique @default(autoincrement())
+  nombre         String          @db.VarChar(100)
+  precio         Float
+  imagen         String?
+  tipoProductoId Int             @map(name: "tipo_producto_id")
+  tipoProductosa TipoProducto    @relation(fields: [tipoProductoId], references: [id])
+  unimedId       Int             @map(name: "uni_med_id")
+  uniMed         UnidadMedida    @relation(fields: [unimedId], references: [id])
+  pedidosdetalle PedidoDetalle[]
+
+  @@map(name: "productos")
+}
+
+model TipoProducto {
+  id        Int        @id @unique @default(autoincrement())
+  nombre    String     @db.VarChar(50)
+  productos Producto[]
+
+  @@map(name: "tipo_productos")
+}
+
+model Usuario {
+  id          Int         @id @unique @default(autoincrement())
+  usuario     String?     @db.VarChar(50)
+  correo      String      @unique @db.VarChar(50)
+  password    String?
+  tipoUsuario TipoUsuario @map(name: "tipo_usuario")
+  permisoId   Int         @map(name: "permiso_id")
+  hashgen     String?     @db.VarChar(200)
+  permiso     Permiso     @relation(fields: [permisoId], references: [id])
+  pedidos     Pedido[]
+
+  @@map(name: "usuarios")
+}
+
+model Permiso {
+  id       Int           @id @unique @default(autoincrement())
+  accion   PermisoAccion
+  tabla    String?       @db.VarChar(20)
+  usuarios Usuario[]
+
+  @@map(name: "permisos")
+}
+
+model UnidadMedida {
+  id             Int             @id @unique @default(autoincrement())
+  descripcion    String          @db.VarChar(100)
+  desc_abreviada String          @db.VarChar(50)
+  productos      Producto[]
+  pedidosdetalle PedidoDetalle[]
+
+  @@map(name: "unid_medidas")
+}
+
+model Cliente {
+  id                Int               @id @unique @default(autoincrement())
+  tipodoc           TipoDocumento
+  doi               String            @db.VarChar(15)
+  razonsocial       String            @db.VarChar(100)
+  direccionfiscal   String            @db.VarChar(100)
+  email             String            @db.VarChar(50)
+  telefono          String            @db.VarChar(9)
+  afectId           Int               @default(1) @map(name: "afectacion_id")
+  AfectacionCliente AfectacionCliente @relation(fields: [afectId], references: [id])
+  pedidos           Pedido[]
+  
+  @@map(name: "clientes")
+}
+
+model AfectacionCliente {
+  id         Int            @id @unique @default(autoincrement())
+  afectacion TipoAfectacion
+  clientes   Cliente[]
+
+  @@map(name: "afectaciontributos")
+}
+
+model Pedido {
+  id               Int             @id @unique @default(autoincrement())
+  clienteId        Int             @map(name: "cliente_id")
+  fecha            DateTime        @db.Date
+  total            Float
+  moneda           TipoMoneda
+  direccion_recojo String          @db.VarChar(100)
+  telefono         String          @db.VarChar(9)
+  estado           TipoEstado
+  usuarioId        Int             @map(name: "usuario_id")
+  usuario          Usuario         @relation(fields: [usuarioId], references: [id])
+  cliente          Cliente         @relation(fields: [clienteId], references: [id])
+  pedidodetalle    PedidoDetalle[]
+  venta            Venta[]
+
+  @@map(name: "pedidos")
+}
+
+model PedidoDetalle {
+  id          Int          @id @default(autoincrement())
+  cant        Float
+  precio      Float
+  subtotal    Float
+  pedidoId    Int
+  pedido      Pedido       @relation(fields: [pedidoId], references: [id])
+  unimedId    Int          @map(name: "unimed_id")
+  unidadesmed UnidadMedida @relation(fields: [unimedId], references: [id])
+  productoId  Int          @map(name: "producto_id")
+  productos   Producto     @relation(fields: [productoId], references: [id])
+
+  @@map(name: "pedidos_detalle")
+}
+
+model Venta {
+  id        Int           @id @unique @default(autoincrement())
+  pedidoid  Int
+  fecdoc    DateTime      @db.Date
+  serie     String        @db.VarChar(4)
+  nrodoc    Int
+  importe   Float
+  formapago TipoFormaPago
+  moneda    TipoMoneda
+  tc        Float
+  pedidos   Pedido        @relation(fields: [pedidoid], references: [id])
+
+
+
+  @@map(name: "Ventas")
+}
+
+enum PermisoAccion {
+  CREATE
+  READ
+  UPDATE
+  DELETE
+  ALL
+}
+
+enum TipoUsuario {
+  ADMIN
+  CLIENTE
+  SUPERADMIN
+}
+
+enum TipoAfectacion {
+  SINAFECTACION
+  DETRACCION
+  PERCEPCION
+  RETENCION
+}
+
+enum TipoMoneda {
+  SOLES
+  DOLARES
+}
+
+enum TipoEstado {
+  PENDIENTE
+  FACTURADO
+  RECHAZADO
+  ANULADO
+}
+
+enum TipoFormaPago {
+  CONTADO
+  CREDITO
+}
+
+enum TipoDocumento {
+  DNI
+  RUC
+  PASAPORTE
+  CARNET_EXTRANJERIA
+  OTROS_DOCUMENTOS
+}
