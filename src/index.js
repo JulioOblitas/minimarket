@@ -9,6 +9,7 @@ import { archivoRouter } from './routers/archivo.Router.js'
 import { pedidoRouter } from './routers/pedido.Router.js'
 import { tipoPermisoRouter } from './routers/tipoPermiso.Router.js'
 import { clienteRouter  } from './routers/cliente.Router.js'
+import { facturacionRouter} from './routers/facturacion.router.js'
 
 const app = express()   
 const PORT  = process.env.PORT  ?? 3001
@@ -24,7 +25,7 @@ app.use(archivoRouter)
 app.use(pedidoRouter)
 app.use(tipoPermisoRouter)
 app.use(clienteRouter)
-
+app.use(facturacionRouter)
 
 app.listen(PORT, () =>{
     console.log(`ACTIVADO SERVIDOR" ${PORT}`)

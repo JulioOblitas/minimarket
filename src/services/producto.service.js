@@ -5,7 +5,7 @@ import { ArchivosService } from "./archivo.service.js";
 export class ProductoService{
     
     static async crearProducto(data){
-    
+   
     const content   = await prisma.producto.create({data});            
     return content;
     }
@@ -98,16 +98,17 @@ export class ProductoService{
         };
     }
     
-   const productoConImagen = {
-        ...lista, imagen:lista.imagen  &&  ArchivosService.devolverURL(lista.imagen),
-    }
-     //lista: productoConImagen,
-     return productoConImagen
-     //lista: productoConImagen,
+    //devolver amazon
+    //const productoConImagen = {
+    //    ...lista, imagen:lista.imagen  &&  ArchivosService.devolverURL(lista.imagen),
+   // }
+    
+     return lista
+     
     
   
   
-     //   return lista;
+     
     }
 
     static async listaProductoPorNombre(nombre){
@@ -157,10 +158,10 @@ export class ProductoService{
             select:{ imagen : true}
         })
 
-            
-         if (productoEncontrado.imagen != null){
+           /*eliminar amazon*/ 
+        /*  if (productoEncontrado.imagen != null){
             ArchivosService.eliminarArchivo(productoEncontrado.imagen);                
-        }
+        }*/
         const  eliminar = await prisma.producto.delete({ where :{ id: Number(id) }}); 
          
         return eliminar;    
@@ -168,16 +169,18 @@ export class ProductoService{
             
     }
     
-    static async actualizarProducto(id, nombre){
-               
-            try{
+    static async actualizarProducto(id,data){
+            console.log(data)
+        try{
             
-                const  actualizar = await prisma.producto.update ({
-                    where: {id: +id} ,        
-                    data: {
-                        nombre : nombre,
-                    },
-                })
+           
+                
+                const  actualizar = await prisma.producto.update({
+                    where: {id: +id},        
+                    data: { nombre: data.nombre,
+                            precio: +data.precio,
+                             tipoProductoId: +data.tipoProductoId, unimedId: +data.unimedId, imagen:data.imagen },                    
+                })  
                         
                 return  {content : actualizar};
             }catch(error){

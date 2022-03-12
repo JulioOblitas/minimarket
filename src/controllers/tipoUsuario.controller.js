@@ -118,3 +118,16 @@ export async function eliminarUsuario(req, res) {
 }
 
 
+
+export async function buscarUsuario(req, res) {
+  //console.log(req.headers);
+  
+  const  params   = req.query
+  try {
+    const resultado = await UsuarioService.buscarUsuario(params.correo)
+    
+    return res.json(resultado);
+  } catch (error) {
+    console.log( error);
+  }
+}

@@ -95,15 +95,16 @@ export async function actualizarProducto(req, res) {
  
    
   try {
-    const data =productodto (req.body)
-    
+    //const data=productodto (req.body)
+    const data=req.body
+  
   
      const id  = +req.params.id
    
     //const passwordencriptado = hashSync(data.password,10)  
     
     
-    const resultado = await ProductoService.actualizarProducto (id,data.nombre) ;
+    const resultado = await ProductoService.actualizarProducto (id,data) ;
    // return res.status(201).json({
     //  content: resultado});
     //return resultado;

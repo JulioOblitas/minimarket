@@ -1,7 +1,7 @@
 import validator  from "validator"
 
 
-export function productodto({nombre, precio,  tipoProductoId,  unimedId  }){ 
+export function productodto({nombre, precio,  tipoProductoId,  unimedId, imagen  }){ 
 
     if (validator.isEmpty(nombre)){
         throw Error("El nombre no puede ser vacio")
@@ -26,7 +26,7 @@ export function productodto({nombre, precio,  tipoProductoId,  unimedId  }){
     }
 
     
-    return { nombre, precio , tipoProductoId, unimedId }
+    return { nombre, precio , tipoProductoId, unimedId, imagen }
 }
 
 

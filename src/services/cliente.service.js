@@ -10,8 +10,6 @@ export class ClienteService{
     return content;
     }
 
-   
-
     static async listaCliente(){
         const lista  = await prisma.cliente.findMany({            
             orderBy :[

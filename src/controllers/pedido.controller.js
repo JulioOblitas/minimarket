@@ -7,6 +7,7 @@ export async function  crearPedido(req,res){
      
     const data = req.body
     
+    console.log(data)
   /*  const  { clienteId,total,moneda,direccion_recojo, telefono, estado, usuarioId,fecha, detallepedido } = data
             
         const datapedido = {

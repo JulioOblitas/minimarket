@@ -85,6 +85,7 @@ export class TipoProductoService{
                     where: {id: +id} ,        
                     data: {
                         nombre : nombre,
+                        
                     },
                 })
                         

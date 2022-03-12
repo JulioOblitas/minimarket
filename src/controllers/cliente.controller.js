@@ -23,14 +23,15 @@ export async function listaCliente(req, res) {
   //console.log(req.headers);
   try {
     const resultado = await ClienteService.listaCliente ({      
-    })
+    });
+    
     return res.json(resultado);
   } catch (error) {
     console.log( error);
   }
 }
 
-  export async function listaClienteId(req,res) {
+export async function listaClienteId(req,res) {
   
 const  id   = +req.params.id
   

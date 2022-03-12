@@ -52,16 +52,52 @@ export class UsuarioService{
             return({ message: "CORREO NO EXISTE" })
         }
       }  
-    
-    
-    static async crearUsuario(data){ 
-        
-       // console.log("fffffes")
+
+    static async obtenerUsuarioEmail(){
         const correo = data.correo
-        console.log(data)
         const usuarioEncontrado = await prisma.usuario.findFirst({
             where :  { correo },            
-            select : { usuario: true},
+            select : { id: true},
+            rejectOnNotFound: false
+          });
+
+          
+        if (usuarioEncontrado){            
+            //para devolver mensaje y datos
+            //return{message: "CORREO EXISTE PERTENECE AL USUARIO" , usuarioEncontrado } 
+            return usuarioEncontrado  
+        }else{
+
+        const content   = await prisma.usuario.create({data});  
+        return content
+        }
+
+
+    }
+    
+    static async buscarUsuario(correo){ 
+        
+        
+    
+         const usuarioEncontrado = await prisma.usuario.findFirst({
+             where :  { correo },            
+             select : { id: true},
+             rejectOnNotFound: false
+           }); 
+         
+             return usuarioEncontrado  
+         }
+           
+     
+
+    static async crearUsuario(data){ 
+        
+       
+        const correo = data.correo
+        
+        const usuarioEncontrado = await prisma.usuario.findFirst({
+            where :  { correo },            
+            select : { usuario: true , id: true},
             rejectOnNotFound: false
           });
 
@@ -70,7 +106,7 @@ export class UsuarioService{
         }else{
 
         const content   = await prisma.usuario.create({data});  
-        return content
+             return  content
         }
           
         
