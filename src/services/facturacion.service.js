@@ -13,7 +13,7 @@ export class FacturacionService {
            tipo_de_comprobante = 1;
           const serie = "FFF1";
   
-      const numero = 2;
+      const numero = 3
       
       //const   xcliente  = data.cliente.doi
       //console.log(xcliente)
