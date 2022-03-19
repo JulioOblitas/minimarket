@@ -4,19 +4,35 @@ import fetch from "node-fetch";
 export class FacturacionService {
   static async generarComprobante(data) {
 
-    //console.log(data)
-    
+    console.log(data)
+    //console.log(data.cliente.tipodoc)
     try {
-      let tipo_de_comprobante;
-      //const { items, cliente } = data;
 
-           tipo_de_comprobante = 1;
-          const serie = "FFF1";
-  
-      const numero = 3
+      let tipo_de_comprobante
+      let destipodoc
+      if (data.cliente.tipodoc === "RUC"){
+        tipo_de_comprobante = 1;          
+        destipodoc= "FACTURA"
+      }else{
+        tipo_de_comprobante = 2;          
+        destipodoc= "BOLETA_DE_VENTA"
+      }
+
+      //const { items, cliente } = data;
+        const numeracion = await prisma.numeracion.findFirst({
+          where: { codsunat: tipo_de_comprobante},          
+      });
       
-      //const   xcliente  = data.cliente.doi
-      //console.log(xcliente)
+
+      //console.log(numeracion)
+      
+      //tipo_de_comprobante = 1;          
+      //   const serie = "FFF1";
+         const serie = numeracion.serie
+         const numero = numeracion.numero + 1;
+      
+      
+      
       
       // traer la informacion del cliente
       //const clienteEncontrado = await  prisma.cliente.findById(cliente);
@@ -28,7 +44,7 @@ export class FacturacionService {
         where : { pedidoId: Number(data.id)},
           });
       
-          console.log(items)
+         // console.log(items)
 
       
       
@@ -121,10 +137,19 @@ export class FacturacionService {
       });
       const dataNubefact = await resultado.json();
       console.log(dataNubefact)
+
+      //actualizacion de la numeracion
+      const actualizarnumero = await prisma.numeracion.update({
+        where: {id: numeracion.id},
+        data: { numero : numero},
+      }) ;
+      
       return {
-        message: "ok",
+        message: "OK",
         data: dataNubefact,
+        
       };
+      
     } catch (error) {
       console.log(error);
       return {

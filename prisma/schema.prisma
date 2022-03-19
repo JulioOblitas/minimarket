@@ -76,7 +76,7 @@ model Cliente {
   afectId           Int               @default(1) @map(name: "afectacion_id")
   AfectacionCliente AfectacionCliente @relation(fields: [afectId], references: [id])
   pedidos           Pedido[]
-  
+
   @@map(name: "clientes")
 }
 
@@ -138,6 +138,16 @@ model Venta {
   @@map(name: "Ventas")
 }
 
+model Numeracion {
+  id     Int             @id @unique @default(autoincrement())
+  tipo   TipoComprobante
+  serie  String          @db.VarChar(5)
+  numero Int
+  codsunat Int
+
+  @@map(name: "numerador")
+}
+
 enum PermisoAccion {
   CREATE
   READ
@@ -182,4 +192,11 @@ enum TipoDocumento {
   PASAPORTE
   CARNET_EXTRANJERIA
   OTROS_DOCUMENTOS
+}
+
+enum TipoComprobante {
+  FACTURA
+  BOLETA_DE_VENTA
+  NOTA_DE_CREDITO
+  NOTA_DE_DEBITO
 }

@@ -1,5 +1,5 @@
 import { PedidoService } from "../services/pedido.service.js"
-import { pedidoDto } from "../services/dtos/request/pedido.dto.js"
+//import { pedidoDto } from "../services/dtos/request/pedido.dto.js"
 
 export async function  crearPedido(req,res){
     
@@ -36,9 +36,17 @@ export async function  crearPedido(req,res){
     }
 }
 
-export async function  actualizarPedido(req,res){
-
-    return
+export async function  actualizarEstadoPedido(req,res){
+  const id = +req.params.id
+  
+  try {
+    
+    const resultado = await PedidoService.actualizarEstadoPedido(id) 
+    return res.json(resultado)
+  } catch (error) {
+    console.log(error)
+  }
+    
 }
 
 export async function  listarPedido(req,res){
@@ -55,7 +63,21 @@ export async function  listarPedido(req,res){
 
     
 }
+//listarPedidoPorIdCliente
 
+export async function  listarPedidoPorIdCliente(req,res){
+  const id = +req.params.id
+  try {
+      const resultado = await PedidoService.listarPedidoPorIdCliente (id);
+      
+      
+      
+      return res.json(resultado);
+    } catch (error) {
+      console.log( error);
+    }
+
+}
 export async function  listarPedidoPorId(req,res){
     const id = +req.params.id
     try {

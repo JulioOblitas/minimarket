@@ -42,9 +42,7 @@ export class  PedidoService{
                             include: {                           
                                     productos: true,                                                                                                          
                                     unidadesmed: true                                    
-                                },                  
-                                                         
-                                                                                                            
+                                },                                                                                                                                                                                       
                 },                
                 cliente:{                  
                 }   
@@ -57,10 +55,34 @@ export class  PedidoService{
 
     }
 
+    static async listarPedidoPorIdCliente(id){
+                
+      const lista = await prisma.pedido.findMany({            
+      where : { clienteId: Number(id)},
+      include: {
+               pedidodetalle: {                            
+                          include: {                           
+                                  productos: true,                                                                                                          
+                                  unidadesmed: true                                    
+                              },                  
+                                                       
+                                                                                                          
+              },                
+              cliente:{                  
+              }                          
+          },
+        });
+
+       
+      return lista;
+
+  }
+
+
 
     
     static async clistarPedidoPorId(id){
-        console.log(id) 
+     //   console.log(id) 
       const lista = await prisma.pedido.findUnique({            
             where : { id : id },
             rejectOnNotFound: false,
@@ -69,7 +91,13 @@ export class  PedidoService{
       return lista;
 
   }
-
+    static async actualizarEstadoPedido(id){
+      const actualizaEstado = await prisma.pedido.update({
+        where : { id: Number(id)},
+        data : { estado: "FACTURADO"}
+      })
+      return actualizaEstado
+    }
 
     static async eliminarPedido(id){
         
